@@ -214,12 +214,19 @@ Bước 1: Gán placeholder vào file PowerPoint của bạn
 Mở file slide PowerPoint của bạn.
 Tại những vị trí bạn muốn dữ liệu từ Power Apps điền vào, hãy viết placeholder tương ứng:
 Slide 1 gõ: {slide1_title}
+
 Slide 2 gõ: {slide2_title}
+
 Slide 3 gõ: {slide3_title}
+
 Slide 4 gõ: {slide4_title}
+
 Slide 5 gõ: {slide5_title}
+
 Lưu ý quan trọng: Khi gõ placeholder (ví dụ {slide1_title}), bạn nên gõ liền mạch từ đầu đến cuối, tránh copy-paste chắp vá hoặc gõ ngắt quãng, vì PowerPoint có thể tự động tách chữ thành các đoạn XML con làm thư viện không nhận diện được.
+
 Bước 2: Thay thế file template
+
 Copy file PowerPoint mới đó của bạn và dán đè vào thư mục dự án theo đúng đường dẫn: 👉 PptxGenerator/template.pptx
 
 Bước 3: Chạy lệnh encode và update lên Power Apps

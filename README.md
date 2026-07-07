@@ -237,8 +237,35 @@ bash
 node scripts/encode-template.js
 # 2. Build & Deploy trực tiếp lên Power Apps
 pac pcf push --publisher-prefix hoa
-# 1. Chuyển file PPTX mới thành mã code Base64
-node scripts/encode-template.js
-# 2. Build & Deploy trực tiếp lên Power Apps
-pac pcf push --publisher-prefix hoa
 Sau khi chạy xong, bạn chỉ cần F5/Refresh lại Power Apps Studio là template mới đã được cập nhật thành công!
+
+---
+
+## ⚡ Hướng dẫn cấu hình Power Automate Flow lấy Template từ SharePoint
+
+### Bước 1 — Tạo Flow
+1. Vào Power Automate, tạo một Flow mới với trigger **PowerApps (V2)**.
+2. Đặt tên Flow, ví dụ: `GetPPTXTemplateFlow`.
+
+### Bước 2 — Thêm Action SharePoint
+1. Thêm action **Get file content** (hoặc *Get file content using path*).
+2. Cấu hình **Site Address** và chỉ đường dẫn đến file `template.pptx` của bạn trên SharePoint.
+
+### Bước 3 — Trả kết quả dạng Base64 về Power Apps
+1. Thêm action **Respond to a PowerApp or flow**.
+2. Thêm một trường Output dạng **Text**, đặt tên là `templateBase64`.
+3. Nhập giá trị cho trường bằng tab **Expression**:
+   ```javascript
+   base64(outputs('Get_file_content')?['body'])
+   ```
+   *(Lưu ý: Thay thế `'Get_file_content'` bằng tên chính xác của action SharePoint của bạn).*
+4. Lưu Flow.
+
+### Bước 4 — Gọi trong Power Apps
+1. Add Flow vào Power Apps qua tab Data.
+2. Chạy Flow để lưu dữ liệu vào biến:
+   ```javascript
+   Set(varTemplateBase64, GetPPTXTemplateFlow.Run().templatebase64)
+   ```
+3. Truyền biến `varTemplateBase64` này vào property của PCF Control.
+

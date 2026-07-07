@@ -8,6 +8,7 @@ export class PptxGenerator implements ComponentFramework.StandardControl<IInputs
     private _exportData = "{}";
     private _buttonLabel = "Xuất PowerPoint";
     private _buttonColor = "#C0392B";
+    private _pptxTemplate = ""; // Lưu chuỗi Base64 nhận được từ SharePoint Flow
 
     public init(
         context: ComponentFramework.Context<IInputs>,
@@ -44,6 +45,9 @@ export class PptxGenerator implements ComponentFramework.StandardControl<IInputs
     }
 
     private _applyProps(context: ComponentFramework.Context<IInputs>): void {
+        // Thu nhập Template Base64 từ Power Apps (SharePoint Flow)
+        this._pptxTemplate = context.parameters.pptxTemplate?.raw ?? "";
+
         // Thu thập 5 slide titles từ từng property riêng
         this._exportData = JSON.stringify({
             slide1_title: context.parameters.slide1Title?.raw ?? "",
@@ -82,6 +86,32 @@ export class PptxGenerator implements ComponentFramework.StandardControl<IInputs
         const originalText = this._button.textContent ?? this._buttonLabel;
         this._button.textContent = "⏳ Đang tạo...";
 
+        // Lấy dữ liệu Base64: Lọc khoảng trắng và tiền tố data:...;base64, (nếu có)
+        let rawTemplate = (this._pptxTemplate || "").trim();
+        
+        console.log("[PptxGenerator] Raw template length received from Power Apps:", rawTemplate.length);
+        if (rawTemplate.length > 100) {
+            console.log("[PptxGenerator] Raw template snippet (first 100 chars):", rawTemplate.substring(0, 100));
+        }
+
+        // Lọc bỏ tiền tố data URI nếu Flow trả về kèm header
+        if (rawTemplate.includes("base64,")) {
+            rawTemplate = rawTemplate.split("base64,")[1];
+            console.log("[PptxGenerator] Cleaned data URI prefix. New length:", rawTemplate.length);
+        }
+
+        const usingFallback = !rawTemplate;
+        const activeTemplate = rawTemplate || TEMPLATE_BASE64;
+
+        console.log("[PptxGenerator] Using fallback demo template?", usingFallback);
+
+        if (!activeTemplate) {
+            alert("Lỗi: Không tìm thấy dữ liệu template PowerPoint!");
+            this._button.textContent = originalText;
+            this._button.disabled = false;
+            return;
+        }
+
         try {
             // Parse JSON data
             let data: Record<string, string>;
@@ -92,7 +122,7 @@ export class PptxGenerator implements ComponentFramework.StandardControl<IInputs
             }
 
             // Decode base64 template
-            const binaryStr = atob(TEMPLATE_BASE64);
+            const binaryStr = atob(activeTemplate);
             const bytes = new Uint8Array(binaryStr.length);
             for (let i = 0; i < binaryStr.length; i++) {
                 bytes[i] = binaryStr.charCodeAt(i);
@@ -125,8 +155,11 @@ export class PptxGenerator implements ComponentFramework.StandardControl<IInputs
             a.click();
             setTimeout(() => URL.revokeObjectURL(url), 3000);
 
+
+
         } catch (err) {
-            console.error("[PptxGenerator]", err);
+            console.error("[PptxGenerator] Lỗi render/decode:", err);
+            alert(`Lỗi khi tạo PPTX: ${(err as Error).message}\n(Hãy kiểm tra F12 Console để xem chi tiết)`);
         } finally {
             this._button.textContent = originalText;
             this._button.disabled = false;

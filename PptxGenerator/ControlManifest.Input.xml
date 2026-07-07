@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="ExportTools" constructor="PptxGenerator" version="0.0.1" display-name-key="PptxGenerator" description-key="PptxGenerator description" control-type="standard" >
+  <control namespace="ExportTools" constructor="PptxGenerator" version="0.0.4" display-name-key="PptxGenerator" description-key="PptxGenerator description" control-type="standard" >
     <!--external-service-usage node declares whether this 3rd party PCF control is using external service or not, if yes, this control will be considered as premium and please also add the external domain it is using.
     If it is not using any external service, please set the enabled="false" and DO NOT add any domain below. The "enabled" will be false by default.
     Example1:
@@ -17,6 +17,9 @@
       <domain></domain>
       -->
     </external-service-usage>
+    <!-- ===== DỮ LIỆU TEMPLATE (BASE64) ===== -->
+    <!-- Template PPTX nhận từ SharePoint Flow -->
+    <property name="pptxTemplate" display-name-key="PowerPoint Template Base64" description-key="Chuỗi dữ liệu Base64 của file template PowerPoint" of-type="Multiple" usage="bound" required="true" />
     <!-- ===== DỮ LIỆU DYNAMIC CHO 5 SLIDE ===== -->
     <!-- Slide 1: Title -->
     <property name="slide1Title" display-name-key="Slide 1 - Title" description-key="Tiêu đề Slide 1" of-type="SingleLine.Text" usage="bound" required="true" />

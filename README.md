@@ -237,4 +237,8 @@ bash
 node scripts/encode-template.js
 # 2. Build & Deploy trực tiếp lên Power Apps
 pac pcf push --publisher-prefix hoa
+# 1. Chuyển file PPTX mới thành mã code Base64
+node scripts/encode-template.js
+# 2. Build & Deploy trực tiếp lên Power Apps
+pac pcf push --publisher-prefix hoa
 Sau khi chạy xong, bạn chỉ cần F5/Refresh lại Power Apps Studio là template mới đã được cập nhật thành công!

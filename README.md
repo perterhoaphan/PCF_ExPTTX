@@ -44,8 +44,20 @@ dotnet tool install --global Microsoft.PowerApps.CLI.Tool
 
 ### Bước 3 — Cài dependencies
 
+Nếu clone dự án có sẵn `package.json`, bạn chỉ cần chạy:
+
 ```bash
 npm install
+```
+
+Hoặc nếu bạn muốn cài đặt các thư viện tạo slide & zip thủ công từ đầu:
+
+```bash
+# Cài đặt thư viện tạo slide & fill template
+npm install pptxgenjs docxtemplater pizzip
+
+# Cài đặt types cho pizzip (phục vụ TypeScript)
+npm install --save-dev @types/pizzip
 ```
 
 ### Bước 4 — (Tuỳ chọn) Tạo lại template PPTX
